@@ -1,5 +1,6 @@
 package android.school.fredrik.schoolproject;
 
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,8 +14,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.java_websocket.drafts.Draft_10;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +40,23 @@ public class MainActivity extends AppCompatActivity {
 
         // Instantiate the RequestQueue.
         queue = Volley.newRequestQueue(this);
+
+        // Web socket setup!
+        // Kollar ifall man kör i en emulator.
+        if ("google_sdk".equals( Build.PRODUCT )) {
+            // Stänger av IPv6 pg a problem med det i emulator.
+            java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
+            java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
+        }
+
+        // Koppla upp till websocket server.
+        // Borde nog dra ut denna i någon sorts tjänst istället. <--------- Kolla up detta.
+        try{
+            WSClient c = new WSClient( new URI( getResources().getString(R.string.websocket_adress) ), new Draft_10() );
+            c.connect();
+        }catch (URISyntaxException ex){
+            System.out.println(ex.getMessage());
+        }
 
     }
 
