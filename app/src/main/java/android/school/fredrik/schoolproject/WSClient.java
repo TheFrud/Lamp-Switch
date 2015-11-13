@@ -5,6 +5,7 @@ package android.school.fredrik.schoolproject;
  */
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.channels.NotYetConnectedException;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
@@ -43,6 +44,11 @@ public class WSClient extends WebSocketClient {
     public void onError( Exception ex ) {
         ex.printStackTrace();
         // if the error is fatal then onClose will be called additionally
+    }
+
+    @Override
+    public void send(String text) throws NotYetConnectedException {
+        super.send(text);
     }
 
 

@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     // For counting number of requests
     long requests;
 
+    // Websocket connection.
+    WSClient c;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         // Koppla upp till websocket server.
         // Borde nog dra ut denna i någon sorts tjänst istället. <--------- Kolla up detta.
         try{
-            WSClient c = new WSClient( new URI( getResources().getString(R.string.websocket_adress) ), new Draft_10() );
+            c = new WSClient( new URI( getResources().getString(R.string.websocket_adress) ), new Draft_10() );
             c.connect();
         }catch (URISyntaxException ex){
             System.out.println(ex.getMessage());
@@ -90,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
         TextView requests = (TextView) findViewById(R.id.requests);
         requests.setText(String.valueOf(this.requests));
+
+        c.send("Android");
 
     }
 
