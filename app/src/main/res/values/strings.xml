@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">School Project</string>
-    <string name="server_address">http://192.168.1.45:9000/</string>
-    <string name="websocket_adress">ws://192.168.1.45:9000/android-ws</string>
+    <string name="server_address">http://192.168.1.45:8085/</string>
+    <string name="websocket_adress">ws://192.168.1.45:8085/android-ws</string>
 </resources>

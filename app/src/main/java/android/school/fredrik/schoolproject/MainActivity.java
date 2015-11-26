@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initiera serveradressen.
+        // Initiera serveradressen. 
         serverAdress = getResources().getString(R.string.server_address);
 
         // Instantiate the RequestQueue.
@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 myText.setText("That didn't work!");
             }
         });
+
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
 
