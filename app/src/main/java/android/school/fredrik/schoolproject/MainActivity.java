@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initiera serveradressen. 
+        // Initiera serveradressen. (Varför inte bara ta ut den direkt när jag kodar?)
+        // Egentligen... Tänk på detta..
         serverAdress = getResources().getString(R.string.server_address);
 
         // Instantiate the RequestQueue.
@@ -54,12 +55,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Koppla upp till websocket server.
         // Borde nog dra ut denna i någon sorts tjänst istället. <--------- Kolla up detta.
+
         try{
-            c = new WSClient( new URI( getResources().getString(R.string.websocket_adress) ), new Draft_10() );
+            c = new WSClient( new URI( getResources().getString(R.string.websocket_endpoint) ), new Draft_10() );
             c.connect();
         }catch (URISyntaxException ex){
             System.out.println(ex.getMessage());
         }
+
 
     }
 
@@ -68,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView myText = (TextView) findViewById(R.id.myText);
 
         // Set url
-        String url = serverAdress + "android";
+        String url = serverAdress + getResources().getString(R.string.websocket_messaging);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -99,11 +102,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void createPerson(View view) throws Exception { // Fixa exception handling.
+    public void createUser(View view) throws Exception { // Fixa exception handling.
 
-        String url = serverAdress + "createperson";
+        String url = serverAdress + getResources().getString(R.string.create_user);
 
-        final JSONObject jsonBody = new JSONObject().put("name", "Rajken").put("age", 51);
+        final JSONObject jsonBody = new JSONObject().put("name", "f@f").put("password", "12345");
 
         // Request a string response from the provided URL.
         // Functional syntax
@@ -112,12 +115,14 @@ public class MainActivity extends AppCompatActivity {
         JsonObjectRequest jsonRequest = new JsonObjectRequest(
                 url,
                 jsonBody,
-                (response) -> System.out.println(response),
-                (error) -> System.out.println(error.getMessage()));
+                (response) -> System.out.println("Success : " + response),
+                (error) -> System.out.println("Error: " + error.getMessage()));
 
 
         // Add the request to the RequestQueue.
         queue.add(jsonRequest);
+
+
 
         System.out.println("Create person method executed.");
 

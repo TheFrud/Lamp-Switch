@@ -1,5 +1,25 @@
 <resources>
+    <!-- General -->
     <string name="app_name">School Project</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to server -->
     <string name="server_address">http://192.168.1.45:8085/</string>
-    <string name="websocket_adress">ws://192.168.1.45:8085/android-ws</string>
+    <string name="websocket_endpoint">ws://192.168.1.45:8085/android-ws</string>
+    <string name="websocket_messaging">android</string>
+    <string name="create_user">createuser</string>
+    <string name="login">login</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 </resources>
