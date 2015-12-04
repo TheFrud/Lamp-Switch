@@ -32,12 +32,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -49,15 +46,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
-    // MYSTUFF
-    // Serveradressen från strings.xml
-    // Fundera på var dessa borde ligga...
-    String serverAdress;
-    // Request Que
-    RequestQueue queue;
-
+public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -74,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private UserRegisterTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -86,17 +75,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //MYSTUFF
-        // Initiera serveradressen.
-        serverAdress = getResources().getString(R.string.server_address);
-
-        // Instantiate the RequestQueue.
-        queue = Volley.newRequestQueue(this);
-
-
-
-
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
+        setupActionBar();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -113,21 +93,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.sign_in_button);
-        mEmailSignInButton.setOnClickListener(
-                view -> attemptLogin()
-        );
-
-        Button navigateToActivityRegisterButton = (Button) findViewById(R.id.navigate_to_activity_register_button);
-        navigateToActivityRegisterButton.setOnClickListener(
-                view -> navigateToActivityRegister()
-        );
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptLogin();
+            }
+        });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
-
-
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -172,6 +148,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    /**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setupActionBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            // Show the Up button in the action bar.
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -220,15 +206,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password, this);
+            mAuthTask = new UserRegisterTask(email, password, this);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    private void navigateToActivityRegister() {
-        Intent intent = new Intent(LoginActivity.this.getApplicationContext(), RegisterActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private boolean isEmailValid(String email) {
@@ -314,7 +294,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
+                new ArrayAdapter<>(RegisterActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -335,7 +315,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
@@ -343,7 +323,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private boolean success;
 
-        UserLoginTask(String email, String password, Context context) {
+        UserRegisterTask(String email, String password, Context context) {
             mEmail = email;
             mPassword = password;
             this.context = context;
@@ -352,7 +332,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            String url = getResources().getString(R.string.server_address) + getResources().getString(R.string.login);
+            String url = getResources().getString(R.string.server_address) + getResources().getString(R.string.register);
 
             try{
                 // Note to self: Ska ändra namn till eMail i jsonobjektet!!!
@@ -380,10 +360,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     // Plocka ut sträng ifrån jsonsvaret. Vi tar värdet från attributet "status"
                     String responseString = (String) response.get("status");
 
-                    // Om servern svarat med statusen "Success", så betyder det att användaren hittades.
+                    // Om servern svarat med statusen "Success", så betyder det att användaren kunde registreras.
                     if(responseString.equals("Success")){
                         System.out.println("Success handler");
-                        System.out.println("User found");
+                        System.out.println("Registration went well.");
                         // Vi sätter vår variabel till true för att visa att uppgifterna var korrekta.
                         success = true;
 
@@ -392,7 +372,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         // Vi sätter vår variabel till false för att visa att uppgifterna INTE var korrekta.
                         success = false;
                     }
-                    // Vi returnerar true eller false beroende på om inloggningen lyckades eller ej.
+                    // Vi returnerar true eller false beroende på om registreringen lyckades eller ej.
                     return success;
                 } catch (InterruptedException e) {
                     success = false;
@@ -409,34 +389,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return success;
             }
 
-
-            /*
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-            */
-
-            // TODO: register the new account here.
-/*            System.out.println(success);
-            return success;*/
-
-/*            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-
         }
 
         @Override
@@ -445,11 +397,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                Intent intent = new Intent(LoginActivity.this.getApplicationContext(), MainActivity.class);
+                // Kanske bättre användarexperience ifall man skickar direkt till Main?
+                // Varför explicit behöva logga in?
+                // Dock kanske bra för utvecklings-purpose att ha det såhär nu...
+                Intent intent = new Intent(RegisterActivity.this.getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.server_error));
                 mPasswordView.requestFocus();
             }
         }
@@ -459,8 +414,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
-
-
     }
 }
 
