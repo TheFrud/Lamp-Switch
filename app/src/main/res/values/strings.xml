@@ -28,7 +28,9 @@
 
     <string name="action_register">Register</string>
     <string name="action_register_short">Register</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
-
+    <!-- Main screen (mer saker ska flyttas hit) -->
+    <string name="profile_button_text">Profile</string>
 
 </resources>

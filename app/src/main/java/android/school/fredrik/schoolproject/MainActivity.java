@@ -1,6 +1,7 @@
 package android.school.fredrik.schoolproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.school.fredrik.schoolproject.dummy.DummyContent;
 import android.support.v7.app.AppCompatActivity;
@@ -92,6 +93,12 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
             System.out.println(ex.getMessage());
         }
 
+    }
+
+    public void navigateToProfileActivity(View view) {
+        Intent intent = new Intent(MainActivity.this.getApplicationContext(), ProfileActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void makeRequest(View view){
