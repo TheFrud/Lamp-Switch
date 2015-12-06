@@ -13,44 +13,63 @@
     tools:context="android.school.fredrik.schoolproject.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
-    <TextView
+    <ProgressBar
+        android:id="@+id/save_profile_settings_progress"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Name"
-        android:id="@+id/textView2" />
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 
-    <EditText
+    <ScrollView
+        android:id="@+id/save_profile_settings_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="[Json data]"
-        android:ems="10"
-        android:id="@+id/userName" />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/save_profile_settings_form_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Name"
+                android:id="@+id/textView2" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="64dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Password"
-        android:id="@+id/textView" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="[Json data]"
+                android:ems="10"
+                android:id="@+id/userName" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/userPassword"
-        android:text="[Json data]" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="64dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Password"
+                android:id="@+id/textView" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/userPassword"
+                android:text="[Json data]" />
 
-        android:text="Save"
-        android:id="@+id/button2"
-        android:layout_weight="0" />
-
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:id="@+id/button2"
+                android:layout_weight="0"
+                android:onClick="saveProfileSettings"
+                />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -11,6 +11,7 @@
     <string name="login">login</string>
     <string name="register">register</string>
     <string name="getusers">getusers</string>
+    <string name="save_profile_settings">saveprofilesettings</string>
 
     <!-- Strings related to login and register -->
     <string name="prompt_email">Email</string>
@@ -32,5 +33,7 @@
 
     <!-- Main screen (mer saker ska flyttas hit) -->
     <string name="profile_button_text">Profile</string>
+    <string name="getuser">getuser</string>
+
 
 </resources>

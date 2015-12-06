@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
     // For counting number of requests
     long requests;
 
+    private User user = User.getINSTANCE();
+
     // Websocket connection.
     WSClient c;
 
@@ -42,38 +44,10 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        System.out.println("Kommer hit?");
 
-        // REST setup
-        // Flytta denna sen... Testar nu bara att få in listan i front end
-
-        String url = getResources().getString(R.string.server_address) + getResources().getString(R.string.getusers);
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
-                (response -> {
-                    System.out.println("Success handler.");
-                    // Try and get json array
-                    try{
-                        JSONArray jsArray = response.getJSONArray("users");
-
-                        System.out.println("Json array length: " + jsArray.length());
-
-                        // Loop through jsonarray
-                        for(int i = 0; i < jsArray.length(); i++) {
-                            jsonObjects.add(jsArray.getJSONObject(i));
-                            System.out.println("Read jsonObject: " + jsonObjects.get(i));
-                        }
-
-                    } catch(JSONException jE){
-                        System.out.println(jE.getMessage());
-                    }
-                }),
-                (error -> {
-                    System.out.println("Failure handler.");
-                    System.out.println(error.getMessage());
-                })
-        );
-
-        RESTClient.getInstance(this).addToRequestQueue(request);
+        jsonObjects = user.getUsers(jsonObjects,this);
+        System.out.println(user.getUserName(this));
 
         // Web socket setup!
         // Kollar ifall man kör i en emulator.
@@ -142,53 +116,7 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
         System.out.println("Interaction!!! Item " + item.content);
     }
 
-    // Functionality
-
-/*    public void createUser(View view) throws Exception { // Fixa exception handling.
-
-        String url = getResources().getString(R.string.server_address) + getResources().getString(R.string.create_user);
-
-        final JSONObject jsonBody = new JSONObject().put("name", "f@f").put("password", "12345");
-
-        // Request a string response from the provided URL.
-        // Functional syntax
-        // Plugin makes this possible with android.
-        // Much more concise in my opinion.
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(
-                url,
-                jsonBody,
-                (response) -> System.out.println("Success : " + response),
-                (error) -> System.out.println("Error: " + error.getMessage()));
-
-
-        // Add the request to the RequestQueue.
-        RESTClient.getInstance(this).addToRequestQueue(jsonRequest);
-
-        System.out.println("Create person method executed.");
-
-    }*/
 
 }
 
 
-
-// Old code for non functional syntax.
-
-// Request a string response from the provided URL.
-// Using anonymous class
-        /*
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(url, jsonBody,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        System.out.println(response);
-                    }
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println("Shit: " + error.getMessage());
-            }
-        });
-        */

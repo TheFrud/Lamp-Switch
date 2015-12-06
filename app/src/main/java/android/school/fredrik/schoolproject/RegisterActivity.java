@@ -48,6 +48,9 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
+
+    private User user = User.getINSTANCE();
+
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -331,64 +334,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
-            String url = getResources().getString(R.string.server_address) + getResources().getString(R.string.register);
-
-            try{
-                // Note to self: Ska ändra namn till eMail i jsonobjektet!!!
-                final JSONObject jsonBody = new JSONObject().put("name", mEmail).put("password", mPassword);
-
-                // Skapar en future. Behöver blocka så att metoden inte returnerar innan jag fått tillbaka ett svar ifrån servern.
-                RequestFuture<JSONObject> future = RequestFuture.newFuture();
-
-
-                // Request a string response from the provided URL.
-                // Functional syntax
-                // Plugin makes this possible with android.
-                // Much more concise in my opinion.
-
-                // Skapar en request som ska skickas till servern.
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody, future, future);
-
-                // Lägger till request i kö. (Körs i princip direkt)
-                RESTClient.getInstance(context).addToRequestQueue(request);
-
-                try {
-                    // När vi fått ett svar från servern spar vi ner det i en variabel.
-                    JSONObject response = future.get();
-
-                    // Plocka ut sträng ifrån jsonsvaret. Vi tar värdet från attributet "status"
-                    String responseString = (String) response.get("status");
-
-                    // Om servern svarat med statusen "Success", så betyder det att användaren kunde registreras.
-                    if(responseString.equals("Success")){
-                        System.out.println("Success handler");
-                        System.out.println("Registration went well.");
-                        // Vi sätter vår variabel till true för att visa att uppgifterna var korrekta.
-                        success = true;
-
-                    }
-                    else {
-                        // Vi sätter vår variabel till false för att visa att uppgifterna INTE var korrekta.
-                        success = false;
-                    }
-                    // Vi returnerar true eller false beroende på om registreringen lyckades eller ej.
-                    return success;
-                } catch (InterruptedException e) {
-                    success = false;
-                    return success;
-                } catch (ExecutionException e) {
-                    success = false;
-                    return success;
-                }
-
-            }catch (Exception e){
-                System.out.println("EXCEPTION 2");
-                System.out.println(e.getMessage());
-                success = false;
-                return success;
-            }
-
+            return user.register(mEmail, mPassword, context);
         }
 
         @Override
