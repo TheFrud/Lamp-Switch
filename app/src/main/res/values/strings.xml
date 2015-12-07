@@ -3,6 +3,8 @@
     <string name="app_name">School Project</string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_register">Register</string>
+    <string name="appeal_to_register">Don\'t have an account?</string>
+
 
     <!-- Strings related to server -->
     <string name="server_address">http://192.168.1.45:8085/</string>
@@ -27,7 +29,7 @@
     </string>
     <string name="server_error">Server error</string>
 
-    <string name="action_register">Register</string>
+    <string name="action_register">Register Here</string>
     <string name="action_register_short">Register</string>
     <string name="title_activity_profile">ProfileActivity</string>
 

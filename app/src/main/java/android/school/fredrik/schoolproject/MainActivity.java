@@ -6,6 +6,9 @@ import android.os.Build;
 import android.school.fredrik.schoolproject.dummy.DummyContent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -117,6 +120,29 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
     }
 
 
+
+    // MENU STUFF
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.navigate_to_profile_activity:
+                Intent intent = new Intent(MainActivity.this.getApplicationContext(), ProfileActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
 
 

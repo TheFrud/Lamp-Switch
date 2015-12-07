@@ -22,6 +22,9 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -70,6 +73,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        System.out.println("Setting up");
+
+        getSupportActionBar().hide();
+
+        // Ska tas bort
+        // getSupportActionBar().setIcon(R.drawable.ic_account);
 
         // Instantiate the RequestQueue.
         queue = Volley.newRequestQueue(this);
@@ -211,6 +221,8 @@ public class LoginActivity extends AppCompatActivity {
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
+
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
