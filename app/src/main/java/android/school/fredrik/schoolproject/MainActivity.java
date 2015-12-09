@@ -49,8 +49,9 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
         setContentView(R.layout.activity_main);
         System.out.println("Kommer hit?");
 
-        jsonObjects = user.getUsers(jsonObjects,this);
+        user.getUsers(jsonObjects, this);
         System.out.println(user.getUserName(this));
+
 
         // Web socket setup!
         // Kollar ifall man kör i en emulator.
@@ -63,12 +64,12 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
         // Koppla upp till websocket server.
         // Borde nog dra ut denna i någon sorts tjänst istället. <--------- Kolla up detta.
 
-        try{
-            c = new WSClient( new URI( getResources().getString(R.string.websocket_endpoint) ), new Draft_10() );
-            c.connect();
-        }catch (URISyntaxException ex){
-            System.out.println(ex.getMessage());
-        }
+        // TO DO: Fixa detta error: "WebSocketClient objects are not reuseable" (därför utkommenterat)
+        // Kanske inte funkar som singleton eller nåt?
+        // c = WSClient.getINSTANCE(getApplicationContext());
+        // c.connect();
+
+        user.readFromFile(this);
 
     }
 

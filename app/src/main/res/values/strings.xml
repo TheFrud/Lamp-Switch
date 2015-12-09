@@ -6,6 +6,11 @@
     <string name="appeal_to_register">Don\'t have an account?</string>
 
 
+    <!-- For ease of development / Integration testing -->
+    <string name="standard_login_id">1</string>
+    <string name="standard_login_name">Frud</string>
+    <string name="standard_login_password">pass1</string>
+
     <!-- Strings related to server -->
     <string name="server_address">http://192.168.1.45:8085/</string>
     <string name="websocket_endpoint">ws://192.168.1.45:8085/android-ws</string>
@@ -36,6 +41,8 @@
     <!-- Main screen (mer saker ska flyttas hit) -->
     <string name="profile_button_text">Profile</string>
     <string name="getuser">getuser</string>
+
+    <string name="user_info">user_info.txt</string>
 
 
 </resources>

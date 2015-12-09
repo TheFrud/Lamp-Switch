@@ -3,6 +3,8 @@ package android.school.fredrik.schoolproject;
 /**
  * Created by Fredrik on 13-Nov-15.
  */
+import android.content.Context;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.NotYetConnectedException;
@@ -15,17 +17,38 @@ import org.java_websocket.handshake.ServerHandshake;
 
 public class WSClient extends WebSocketClient {
 
-    public WSClient( URI serverUri , Draft draft ) {
+    private boolean connected = false;
+
+    private static WSClient INSTANCE = null;
+            // new WSClient(new URI( ().getResources().getString(R.string.websocket_endpoint) ), new Draft_10() )
+
+    private WSClient( URI serverUri , Draft draft ) {
         super( serverUri, draft );
     }
 
-    public WSClient( URI serverURI ) {
+    private WSClient( URI serverURI ) {
         super( serverURI );
+    }
+
+    public static WSClient getINSTANCE(Context context) {
+        if(INSTANCE == null){
+            try{
+                INSTANCE = new WSClient(new URI( context.getResources().getString(R.string.websocket_endpoint) ), new Draft_10() );
+            } catch(URISyntaxException ex){
+                System.out.println(ex.getMessage());
+            }
+        }
+        return INSTANCE;
+    }
+
+    public boolean isConnected() {
+        return connected;
     }
 
     @Override
     public void onOpen( ServerHandshake handshakedata ) {
         System.out.println( "opened connection" );
+        connected = true;
         // if you plan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
     }
 

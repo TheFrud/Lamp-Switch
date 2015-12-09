@@ -41,7 +41,6 @@
                 android:id="@+id/imageView"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/pratbubbla"
-                android:
                 android:layout_weight="0.69" />
 
             <android.support.design.widget.TextInputLayout
