@@ -44,5 +44,7 @@
 
     <string name="user_info">user_info.txt</string>
 
+    <string name="lamp">Lamp</string>
+
 
 </resources>

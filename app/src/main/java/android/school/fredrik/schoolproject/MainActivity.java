@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
     private User user = User.getINSTANCE();
 
     // Websocket connection.
-    WSClient c;
+    private WSClient c = null;
 
     List<JSONObject> jsonObjects = new ArrayList<>();
 
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
         System.out.println("Kommer hit?");
 
         user.getUsers(jsonObjects, this);
-        System.out.println(user.getUserName(this));
+        // System.out.println(user.getUserName(this));
 
 
         // Web socket setup!
@@ -61,16 +62,27 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
             java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
         }
 
-        // Koppla upp till websocket server.
-        // Borde nog dra ut denna i någon sorts tjänst istället. <--------- Kolla up detta.
 
-        // TO DO: Fixa detta error: "WebSocketClient objects are not reuseable" (därför utkommenterat)
-        // Kanske inte funkar som singleton eller nåt?
-        // c = WSClient.getINSTANCE(getApplicationContext());
-        // c.connect();
+        // Trying with singleton
+        c = WSClient.getINSTANCE(this);
 
-        user.readFromFile(this);
+        if(!c.isConnected()){
+            System.out.println("Connecting");
+            c.connect();
+        } else {
+            System.out.println("ELSE: State req");
+            c.send("STATE_REQUEST");
+        }
 
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        c.send("LEAVE");
+        System.out.println("Sent message to server, removing user from message receivers.");
     }
 
     public void navigateToProfileActivity(View view) {
@@ -112,7 +124,17 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
         requests.setText(String.valueOf(this.requests));
 
         c.send("Android");
+    }
 
+    public void switchLampState(View view){
+        final Switch lampSwitch = (Switch) findViewById(R.id.lamp_switch);
+        if(lampSwitch.isChecked()){
+            c.send("ON");
+            System.out.println("Switched lamp state to on");
+        } else {
+            c.send("OFF");
+            System.out.println("Switched lamp state to off");
+        }
     }
 
     @Override

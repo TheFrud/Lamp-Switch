@@ -132,7 +132,7 @@ public class User {
     }
 
     public String getUserName(Context context) {
-
+        System.out.println("Trying to get user name");
         if(stateChanged){
             if(isInternetAvailable()){
                 System.out.println("Internet available: Asking server for info...");
@@ -211,10 +211,11 @@ public class User {
                 JSONObject response = future.get();
 
                 // Plocka ut sträng ifrån jsonsvaret. Vi tar värdet från attributet "status"
-                String responseString = (String) response.get("status");
+                String responseStringStatus = (String) response.get("status");
+                String msg = (String) response.get("msg");
 
                 // Om servern svarat med statusen "Success", så betyder det att användaren kunde registreras.
-                if(responseString.equals("Success")){
+                if(responseStringStatus.equals("Success")){
                     System.out.println("Success handler");
                     System.out.println("Registration went well.");
                     // Vi sätter vår variabel till true för att visa att uppgifterna var korrekta.
@@ -222,8 +223,10 @@ public class User {
                     setStateChanged(true);
 
                 }
+
                 else {
                     // Vi sätter vår variabel till false för att visa att uppgifterna INTE var korrekta.
+
                     success = false;
                 }
                 // Vi returnerar true eller false beroende på om registreringen lyckades eller ej.
