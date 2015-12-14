@@ -4,13 +4,11 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONObject;
-
 /**
- * Created by Fredrik on 01-Dec-15.
+ * Handles the request que which are used to make the calls to the RESTful API on the server.
+ * @author Fredrik Johansson
  */
 public class RESTClient {
 

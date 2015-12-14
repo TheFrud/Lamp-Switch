@@ -6,6 +6,7 @@ package android.school.fredrik.schoolproject;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Switch;
 
 import java.net.URI;
@@ -18,6 +19,10 @@ import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 
+/**
+ * xxx
+ * @author Fredrik Johansson
+ * */
 public class WSClient extends WebSocketClient {
 
     private boolean connected = false;
@@ -25,6 +30,9 @@ public class WSClient extends WebSocketClient {
     private static Context context = null;
 
     private static WSClient INSTANCE = null;
+
+    // LOG TAG
+    private static final String TAG = WSClient.class.getSimpleName();
 
     private WSClient(URI serverURI) {
         super(serverURI);
@@ -42,85 +50,89 @@ public class WSClient extends WebSocketClient {
                 WSClient.context = context;
                 INSTANCE = new WSClient(new URI( context.getResources().getString(R.string.websocket_endpoint) ), new Draft_10() );
             } catch(URISyntaxException ex){
-                System.out.println(ex.getMessage());
+                Log.d(TAG, ex.getMessage());
             }
         }
         return INSTANCE;
     }
 
-    /*
-    private static WSClient INSTANCE = null;
-            // new WSClient(new URI( ().getResources().getString(R.string.websocket_endpoint) ), new Draft_10() )
-
-    private WSClient( URI serverUri , Draft draft ) {
-        super( serverUri, draft );
-    }
-
-    private WSClient( URI serverURI ) {
-        super( serverURI );
-    }
-
-    public static WSClient getINSTANCE(Context context) {
-        if(INSTANCE == null){
-            try{
-                INSTANCE = new WSClient(new URI( context.getResources().getString(R.string.websocket_endpoint) ), new Draft_10() );
-            } catch(URISyntaxException ex){
-                System.out.println(ex.getMessage());
-            }
-        }
-        return INSTANCE;
-    }
-*/
-
+    /**
+     *  xxx
+     *
+     * */
     public boolean isConnected() {
         return connected;
     }
 
+    /**
+     *  xxx
+     *
+     * */
     @Override
     public void onOpen( ServerHandshake handshakedata ) {
-        System.out.println( "opened connection" );
+        Log.d(TAG, "opened connection");
         connected = true;
         send("STATE_REQUEST");
         // if you plan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
     }
 
+    /**
+     *  xxx
+     *
+     * */
     @Override
     public void onMessage( String message ) {
-        System.out.println( "received: " + message );
+        Log.d(TAG, "received: " + message);
         if(message.equals("ON")){
-            System.out.println("Lamp got turned on.");
+            Log.d(TAG, "Lamp got turned on.");
             new UpdateSwitch(true).execute((Void) null);
         }
         if(message.equals("OFF")){
-            System.out.println("Lamp got turned off");
+            Log.d(TAG, "Lamp got turned off");
             new UpdateSwitch(false).execute((Void) null);
         }
     }
 
+    /**
+     *  xxx
+     *
+     * */
     @Override
     public void onClose( int code, String reason, boolean remote ) {
         // The codecodes are documented in class org.java_websocket.framing.CloseFrame
-        System.out.println( "Connection closed by " + ( remote ? "remote peer" : "us" ) );
+        Log.d(TAG, "Connection closed by " + (remote ? "remote peer" : "us"));
         connected = false;
     }
 
+    /**
+     *  xxx
+     *
+     * */
     @Override
-    public void onError( Exception ex ) {
-        ex.printStackTrace();
+    public void onError( Exception e ) {
+        Log.e(TAG, e.getMessage());
         // if the error is fatal then onClose will be called additionally
     }
 
+    /**
+     *  xxx
+     *
+     * */
     @Override
     public void send(String text) throws NotYetConnectedException {
         super.send(text);
     }
 
-
+    /**
+     *  xxx
+     * @author Fredrik Johansson
+     * */
     public class UpdateSwitch extends AsyncTask<Void, Void, Boolean> {
 
         private boolean state;
 
         UpdateSwitch(boolean state) {this.state = state;}
+
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -128,27 +140,21 @@ public class WSClient extends WebSocketClient {
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
-            if (success) {
+        protected void onPostExecute(final Boolean state) {
+
+            // True, if the state is ON.
+            if (state) {
                 final Switch lampSwitch = (Switch) ((Activity)context).findViewById(R.id.lamp_switch);
                 lampSwitch.setChecked(true);
-            } else {
+            }
+
+            // If the state is OFF
+            else {
                 final Switch lampSwitch = (Switch) ((Activity)context).findViewById(R.id.lamp_switch);
                 lampSwitch.setChecked(false);
             }
         }
 
-        @Override
-        protected void onCancelled() {
-
-        }
-
-
-
-
-
     }
-
-
 
 }

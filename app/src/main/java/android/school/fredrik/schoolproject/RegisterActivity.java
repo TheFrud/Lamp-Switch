@@ -5,86 +5,71 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.database.Cursor;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
 
 /**
- * A login screen that offers login via email/password.
+ * Handles the registration functionality.
+ * @author Fredrik Johansson
  */
 public class RegisterActivity extends AppCompatActivity{
 
-
+    // xxx
     private User user = User.getINSTANCE();
 
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserRegisterTask mAuthTask = null;
+    // xxx
+    private ClientSideValidation validator = null;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    private EditText eMailView;
+    private EditText passwordView;
+    private View progressView;
+    private View loginFormView;
+
+    // LOG TAG
+    private static final String TAG = RegisterActivity.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "Start of onCreate method.");
 
         setContentView(R.layout.activity_register);
+
+        // So that we can navigate back to the login activity with the up arrow.
         setupActionBar();
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptRegistration();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptRegistration();
-            }
-        });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Instantiates UI elements.
+        eMailView = (EditText) findViewById(R.id.email);
+        passwordView = (EditText) findViewById(R.id.password);
+        loginFormView = findViewById(R.id.login_form);
+        progressView = findViewById(R.id.login_progress);
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+
+        // When the user clicks the registration button. A attempt will be made to log register the user.
+        mEmailSignInButton.setOnClickListener(
+                view -> attemptRegistration()
+        );
+
+        Log.d(TAG, "End of onCreate method.");
     }
 
-
-
-
     /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
+     * Enables the up button in the menu.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setupActionBar() {
@@ -95,69 +80,60 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
+     * Called from view. Attempts to register. Does client-side validation before sending user info to the server for server-side validation.
+     * */
     private void attemptRegistration() {
-        if (mAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        eMailView.setError(null);
+        passwordView.setError(null);
 
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        // Get user supplied values.
+        String email = eMailView.getText().toString();
+        String password = passwordView.getText().toString();
 
-        boolean cancel = false;
+        // xxx
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+        validator = new ClientSideValidation(this);
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
+        validator.checkValidity(email, password);
+        boolean success = validator.getSuccess();
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+        // If client-side validation failed.
+        if(!success){
+            String message = validator.getMessage();
+
+            if(message.equals(getString(R.string.error_invalid_password))){
+                passwordView.setError(message);
+                focusView = passwordView;
+            }
+
+            else if(message.equals(getString(R.string.error_field_required))){
+                eMailView.setError(message);
+                focusView = eMailView;
+            }
+
+            else if(message.equals(getString(R.string.error_invalid_email))){
+                eMailView.setError(message);
+                focusView = eMailView;
+            }
+
+            /* There was an error; don't attempt login and focus the first
+            form field with an error.*/
             focusView.requestFocus();
-        } else {
+        }
+
+        else {
             // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // perform the user registration attempt.
             showProgress(true);
-            mAuthTask = new UserRegisterTask(email, password, this);
-            mAuthTask.execute((Void) null);
+            new UserRegisterTask(email, password, this).execute((Void) null);;
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        return email.contains("@") && email.length() < 254;
-    }
-
-    private boolean isPasswordValid(String password) {
-        if(password.length() < 4){
-            return false;
-        }
-        return true;
     }
 
     /**
+     * Note from Fredrik: I don't fully understand this code.. but it works.
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -168,39 +144,38 @@ public class RegisterActivity extends AppCompatActivity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            loginFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    progressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
-    // THIS DOES NOT WORK RIGHT NOW
+    // THIS DOES NOT WORK RIGHT NOW (WIP)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                System.out.println("Tried to navigate back");
-                System.out.println(android.R.id.home);
+                Log.d(TAG, "Tried to navigate back");
 
                 Intent intent = NavUtils.getParentActivityIntent(this);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -214,17 +189,19 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
+     * This task is starting the server-side validation.
+     * It makes a call to the server (using the User-class)
+     * with the user info it got through the constructor.
+     *
+     * @author Fredrik Johansson
+     * */
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
         private final Context context;
 
-        private boolean success;
-
+        // The task get supplied the user supplied information in the constructor.
         UserRegisterTask(String email, String password, Context context) {
             mEmail = email;
             mPassword = password;
@@ -233,32 +210,31 @@ public class RegisterActivity extends AppCompatActivity{
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            // Using the user supplied information to make a login attempt.
             return user.register(mEmail, mPassword, context);
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
             showProgress(false);
 
+            // If the server-side validation succeeded.
             if (success) {
-                // Kanske bättre användarexperience ifall man skickar direkt till Main?
-                // Varför explicit behöva logga in?
-                // Dock kanske bra för utvecklings-purpose att ha det såhär nu...
+                // The user gets sent to the LoginActivity. (due to the success of the registration)
                 Intent intent = new Intent(RegisterActivity.this.getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
-            } else {
-                mPasswordView.setError(getString(R.string.server_error));
-                mPasswordView.requestFocus();
+            }
+
+            // If the server-side validation failed.
+            else {
+                // The user gets notified about the failure of the registration attempt.
+                passwordView.setError(getString(R.string.server_error));
+                passwordView.requestFocus();
             }
         }
 
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
+
     }
 }
 

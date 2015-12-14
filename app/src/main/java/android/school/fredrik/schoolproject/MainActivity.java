@@ -1,151 +1,106 @@
 package android.school.fredrik.schoolproject;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.school.fredrik.schoolproject.dummy.DummyContent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
-import org.java_websocket.drafts.Draft_10;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Class description
+ * @author Fredrik Johansson
+ */
 public class MainActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
 
-    // For counting number of requests
-    long requests;
-
-    private User user = User.getINSTANCE();
-
-    // Websocket connection.
+    // Websocket-client.
     private WSClient c = null;
 
-    List<JSONObject> jsonObjects = new ArrayList<>();
+    // LOG TAG
+    private static final String TAG = MainActivity.class.getSimpleName();
 
+    /**
+     * Creates the activity, sets up web socket connection and lamp state.
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        System.out.println("Kommer hit?");
+        Log.d(TAG, "Start of onCreate method.");
 
-        user.getUsers(jsonObjects, this);
-        // System.out.println(user.getUserName(this));
-
-
-        // Web socket setup!
-        // Kollar ifall man kör i en emulator.
+        /*Web socket setup!
+        Checks if using emulator.*/
         if ("google_sdk".equals( Build.PRODUCT )) {
-            // Stänger av IPv6 pg a problem med det i emulator.
+            // Turns off IPv6 due to it having problems in emulators.
             java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
             java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
         }
 
-
-        // Trying with singleton
+        // Initializing web socket instance.
         c = WSClient.getINSTANCE(this);
 
+        // Checking if the web socket instance already is connected to the server
         if(!c.isConnected()){
-            System.out.println("Connecting");
+            // Tries to connect to server.
+            Log.d(TAG, "Web socket instance: NOT connected to server.");
+            Log.d(TAG, "Connecting to server...");
             c.connect();
         } else {
-            System.out.println("ELSE: State req");
+            // Already connected
+            Log.d(TAG, "Web socket instance: IS Connected to server.");
+
+            // Asks server for lamp state
+            Log.d(TAG, "Asking server for lamp state...");
             c.send("STATE_REQUEST");
         }
-
+        Log.d(TAG, "End of onCreate method.");
     }
-
-
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*Sends message to server
+        This will remove this user from the receiver-list on the server.*/
         c.send("LEAVE");
-        System.out.println("Sent message to server, removing user from message receivers.");
+        Log.d(TAG, "Sent message to server, removing user from message receivers.");
     }
 
+/** Called from view. Navigates user to ProfileActivity.*/
     public void navigateToProfileActivity(View view) {
         Intent intent = new Intent(MainActivity.this.getApplicationContext(), ProfileActivity.class);
         startActivity(intent);
         finish();
     }
 
-    public void makeRequest(View view){
-
-        final TextView myText = (TextView) findViewById(R.id.myText);
-
-        // Set url
-        String url = getResources().getString(R.string.server_address) + getResources().getString(R.string.websocket_messaging);
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        myText.setText("Response is: "+ response.substring(0,5));
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                myText.setText("That didn't work!");
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        RESTClient.getInstance(this).addToRequestQueue(stringRequest);
-
-        requests++;
-        System.out.println("Create request method executed.");
-        System.out.println(requests);
-
-        TextView requests = (TextView) findViewById(R.id.requests);
-        requests.setText(String.valueOf(this.requests));
-
-        c.send("Android");
-    }
-
+/** Called from view. Switches lamp state.*/
     public void switchLampState(View view){
         final Switch lampSwitch = (Switch) findViewById(R.id.lamp_switch);
+
+        // Checks the state of the switch the user clicked on.
         if(lampSwitch.isChecked()){
+            // Sends message to server. Server will tell all receivers that the lamp has been turned ON.
             c.send("ON");
-            System.out.println("Switched lamp state to on");
+            Log.d(TAG, "I switched lamp state to on");
         } else {
+            // Sends message to server. Server will tell all receivers that the lamp has been turned OFF.
             c.send("OFF");
-            System.out.println("Switched lamp state to off");
+            Log.d(TAG, "I switched lamp state to off");
         }
     }
 
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        System.out.println("Interaction!!! Item " + item.content);
+        Log.d(TAG, "Interaction!!! Item " + item.content);
     }
 
 
-
-    // MENU STUFF
-
+    /** Inflates the menu so that the user can navigate to the ProfileActivity.*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -154,14 +109,18 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
 
     }
 
+    /** Gets called when the user clicked a menu item. Depending on the menu item, different actions happen.*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
+        // Checks which menu item the user clicked on.
         switch (item.getItemId()) {
+            // If the user clicked to navigate to the ProfileActivity.
             case R.id.navigate_to_profile_activity:
+                // Navigates to the ProfileActivity.
                 Intent intent = new Intent(MainActivity.this.getApplicationContext(), ProfileActivity.class);
                 startActivity(intent);
                 return true;
+            // Default.
             default:
                 return super.onOptionsItemSelected(item);
         }

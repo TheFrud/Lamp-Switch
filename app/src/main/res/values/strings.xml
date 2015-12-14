@@ -45,6 +45,8 @@
     <string name="user_info">user_info.txt</string>
 
     <string name="lamp">Lamp</string>
+    <string name="permlab_flashlight">Label</string>
+    <string name="permdesc_flashlight">Description</string>
 
 
 </resources>

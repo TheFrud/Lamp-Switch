@@ -1,7 +1,6 @@
 package android.school.fredrik.schoolproject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -12,21 +11,13 @@ import com.android.volley.toolbox.RequestFuture;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by Fredrik on 05-Dec-15.
+ * xxxxxxxx
+ * @author Fredrik Johansson
  */
 public class User {
 
@@ -39,69 +30,8 @@ public class User {
 
     private static final User INSTANCE = new User();
 
-
-    // FLYTTA
-    public boolean saveUserDataOnFile(int userId, String userName, String userPassword, Context context){
-        String FILENAME = context.getResources().getString(R.string.user_info);
-
-        FileOutputStream fos = null;
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("user_info.txt", Context.MODE_PRIVATE));
-            outputStreamWriter.write(String.valueOf(userId));
-            outputStreamWriter.write("\n");
-            outputStreamWriter.write(userName);
-            outputStreamWriter.write("\n");
-            outputStreamWriter.write(userPassword);
-            outputStreamWriter.write("\n");
-            outputStreamWriter.close();
-            System.out.println("User data saved to file.");
-            return true;
-
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-            return false;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
-    // FLYTTA
-    public boolean readFromFile(Context context) {
-
-        try {
-            String FILENAME = context.getResources().getString(R.string.user_info);
-            InputStream inputStream = context.openFileInput(FILENAME);
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-
-                List<String> info = new ArrayList<>();
-
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    info.add(receiveString);
-                }
-
-                inputStream.close();
-
-                // Reading data from file.
-                userId = Integer.parseInt(info.get(0));
-                userName = info.get(1);
-                userPassword = info.get(2);
-
-                return true;
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-        return false;
-    }
+    // LOG TAG
+    private static final String TAG = User.class.getSimpleName();
 
     public boolean isInternetAvailable() {
         return internetAvailable;
@@ -116,12 +46,15 @@ public class User {
     public int getUserId(Context context) {
         if(stateChanged){
             if(isInternetAvailable()){
-                System.out.println("Internet available: Asking server for info...");
+                Log.d(TAG, "Internet available: Asking server for info...");
                 new GetUserTask(context).execute((Void) null);
             }
             else {
-                System.out.println("Internet NOT available: Reading from local storage...");
-                readFromFile(context);
+                Log.d(TAG, "Internet NOT available: Reading from local storage...");
+                String userIdFromFile = UserFileUtil.readFromFile("userId", context);
+                if(userIdFromFile != null){
+                    userId = Integer.parseInt(userIdFromFile);
+                }
             }
         }
         return userId;
@@ -132,15 +65,18 @@ public class User {
     }
 
     public String getUserName(Context context) {
-        System.out.println("Trying to get user name");
+        Log.d(TAG, "Trying to get user name");
         if(stateChanged){
             if(isInternetAvailable()){
-                System.out.println("Internet available: Asking server for info...");
+                Log.d(TAG, "Internet available: Asking server for info...");
                 new GetUserTask(context).execute((Void) null);
             }
             else {
-                System.out.println("Internet NOT available: Reading from local storage...");
-                readFromFile(context);
+                Log.d(TAG, "Internet NOT available: Reading from local storage...");
+                String userNameFromFile = UserFileUtil.readFromFile("userName", context);
+                if(userNameFromFile != null){
+                    userName = userNameFromFile;
+                }
             }
         }
         return userName;
@@ -153,12 +89,15 @@ public class User {
     public String getUserPassword(Context context) {
         if(stateChanged){
             if(isInternetAvailable()){
-                System.out.println("Internet available: Asking server for info...");
+                Log.d(TAG, "Internet available: Asking server for info...");
                 new GetUserTask(context).execute((Void) null);
             }
             else {
-                System.out.println("Internet NOT available: Reading from local storage...");
-                readFromFile(context);
+                Log.d(TAG, "Internet NOT available: Reading from local storage...");
+                String userPasswordFromFile = UserFileUtil.readFromFile("userPassword", context);
+                if(userPasswordFromFile != null){
+                    userPassword = userPasswordFromFile;
+                }
             }
         }
         return userPassword;
@@ -180,8 +119,6 @@ public class User {
 
 
     // Functionality
-
-
     public boolean register(String mEmail, String mPassword, Context context){
         boolean success;
 
@@ -216,8 +153,6 @@ public class User {
 
                 // Om servern svarat med statusen "Success", så betyder det att användaren kunde registreras.
                 if(responseStringStatus.equals("Success")){
-                    System.out.println("Success handler");
-                    System.out.println("Registration went well.");
                     // Vi sätter vår variabel till true för att visa att uppgifterna var korrekta.
                     success = true;
                     setStateChanged(true);
@@ -232,16 +167,17 @@ public class User {
                 // Vi returnerar true eller false beroende på om registreringen lyckades eller ej.
                 return success;
             } catch (InterruptedException e) {
+                Log.e(TAG, e.getMessage());
                 success = false;
                 return success;
             } catch (ExecutionException e) {
+                Log.e(TAG, e.getMessage());
                 success = false;
                 return success;
             }
 
         }catch (Exception e){
-            System.out.println("EXCEPTION 2");
-            System.out.println(e.getMessage());
+            Log.e(TAG, e.getMessage());
             success = false;
             return success;
         }
@@ -281,8 +217,7 @@ public class User {
 
                 // Om servern svarat med statusen "Success", så betyder det att användaren hittades.
                 if(responseString.equals("Success")){
-                    System.out.println("Success handler");
-                    System.out.println("User found");
+
                     // Vi sätter vår variabel till true för att visa att uppgifterna var korrekta.
                     success = true;
 
@@ -296,7 +231,7 @@ public class User {
                     setUserName(userName);
                     setUserPassword(userPassword);
 
-                    saveUserDataOnFile(userId, userName, userPassword, context);
+                    UserFileUtil.saveUserDataOnFile(userId, userName, userPassword, context);
 
                 }
                 else {
@@ -306,16 +241,17 @@ public class User {
                 // Vi returnerar true eller false beroende på om inloggningen lyckades eller ej.
                 return success;
             } catch (InterruptedException e) {
+                Log.e(TAG, e.getMessage());
                 success = false;
                 return success;
             } catch (ExecutionException e) {
+                Log.e(TAG, e.getMessage());
                 success = false;
                 return success;
             }
 
         }catch (Exception e){
-            System.out.println("EXCEPTION 2");
-            System.out.println(e.getMessage());
+            Log.e(TAG, e.getMessage());
             success = false;
             return success;
         }
@@ -323,49 +259,6 @@ public class User {
 
     public void getUsers(List users, Context context){
         new GetUsersTask(users, context).execute((Void) null);
-
-/*        String url = context.getResources().getString(R.string.server_address) + context.getResources().getString(R.string.getusers);
-
-        RequestFuture<JSONObject> future = RequestFuture.newFuture();
-
-        try {
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, future, future);
-            RESTClient.getInstance(context).addToRequestQueue(request);
-        } catch (Exception ex){
-        System.out.println(ex.getMessage());
-        }
-
-        try {
-            // När vi fått ett svar från servern spar vi ner det i en variabel.
-            JSONObject response = future.get();
-
-            // Plocka ut sträng ifrån jsonsvaret. Vi tar värdet från attributet "status"
-            String responseString = (String) response.get("status");
-
-            // Om servern svarat med statusen "Success", så betyder det att användaren hittades.
-            if (responseString.equals("Success")) {
-                System.out.println("Success handler.");
-                // Try and get json array
-                try {
-                    JSONArray jsArray = response.getJSONArray("users");
-
-                    // Loop through jsonarray
-                    for (int i = 0; i < jsArray.length(); i++) {
-                        users.add(jsArray.getJSONObject(i));
-                    }
-
-                } catch (JSONException jE) {
-                    System.out.println(jE.getMessage());
-                }
-
-            } else {
-                System.out.println("Gick skräp att få användare");
-            }
-        } catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
-
-        return users;*/
     }
 
     public boolean saveProfileSettings(String newUserName, String newUserPassword, Context context){
@@ -410,13 +303,13 @@ public class User {
 
                 // Om servern svarat med statusen "Success", så betyder det att användaren hittades.
                 if(responseString.equals("Success")){
-                    System.out.println("Success handler");
-                    System.out.println("Profile updated...");
+                    Log.d(TAG, "Success handler");
+                    Log.d(TAG, "Profile updated...");
                     // Vi sätter vår variabel till true för att visa att uppgifterna var korrekta.
                     success = true;
                     setStateChanged(true);
 
-                    saveUserDataOnFile(userId, newUserName, newUserPassword, context);
+                    UserFileUtil.saveUserDataOnFile(userId, newUserName, newUserPassword, context);
                 }
                 else {
                     // Vi sätter vår variabel till false för att visa att uppgifterna INTE var korrekta.
@@ -425,24 +318,22 @@ public class User {
                 // Vi returnerar true eller false beroende på om inloggningen lyckades eller ej.
                 return success;
             } catch (InterruptedException e) {
+                Log.e(TAG, e.getMessage());
                 success = false;
                 return success;
             } catch (ExecutionException e) {
+                Log.e(TAG, e.getMessage());
                 success = false;
                 return success;
             }
 
         }catch (Exception e){
-            System.out.println("EXCEPTION 2");
-            System.out.println(e.getMessage());
+            Log.e(TAG, e.getMessage());
             success = false;
             return success;
         }
 
     }
-
-
-
 
     public class GetUserTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -490,8 +381,8 @@ public class User {
 
                     // Om servern svarat med statusen "Success", så betyder det att användaren hittades.
                     if(responseString.equals("Success")){
-                        System.out.println("GetUserTask: Success handler");
-                        System.out.println("GetUserTask: Executed correctly.");
+                        Log.d(TAG, "GetUserTask: Success handler");
+                        Log.d(TAG, "GetUserTask: Executed correctly.");
                         // Vi sätter vår variabel till true för att visa att uppgifterna var korrekta.
                         success = true;
 
@@ -511,23 +402,22 @@ public class User {
                     else {
                         // Vi sätter vår variabel till false för att visa att uppgifterna INTE var korrekta.
                         success = false;
-                        System.out.println("FAIL!");
+                        Log.e(TAG, "FAIL!");
                     }
                     // Vi returnerar true eller false beroende på om inloggningen lyckades eller ej.
                     return success;
                 } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());
+                    Log.e(TAG, e.getMessage());
                     success = false;
                     return success;
                 } catch (ExecutionException e) {
-                    System.out.println(e.getMessage());
+                    Log.e(TAG, e.getMessage());
                     success = false;
                     return success;
                 }
 
             }catch (Exception e){
-                System.out.println("EXCEPTION 2");
-                System.out.println(e.getMessage());
+                Log.e(TAG, e.getMessage());
                 success = false;
                 return success;
             }
@@ -537,22 +427,13 @@ public class User {
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success) {
-                System.out.println("Went well");
+                Log.d(TAG, "Get user: Success.");
             } else {
-                System.out.println("Went bad.");
+                Log.d(TAG, "Get user: Failed.");
             }
         }
 
-        @Override
-        protected void onCancelled() {
-
-        }
-
-
-
     }
-
-
 
     public class GetUsersTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -575,8 +456,8 @@ public class User {
             try {
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, future, future);
                 RESTClient.getInstance(context).addToRequestQueue(request);
-            } catch (Exception ex){
-                System.out.println(ex.getMessage());
+            } catch (Exception e){
+                Log.e(TAG, e.getMessage());
             }
 
             try {
@@ -588,58 +469,49 @@ public class User {
 
                 // Om servern svarat med statusen "Success", så betyder det att användaren hittades.
                 if (responseString.equals("Success")) {
-                    System.out.println("Success handler.");
-                    System.out.println("GOT USERS!");
+
                     // Try and get json array
                     try {
                         JSONArray jsArray = response.getJSONArray("users");
 
-                        // Loop through jsonarray
+                        // Adding the users we got from the server into our list.
                         for (int i = 0; i < jsArray.length(); i++) {
                             users.add(jsArray.getJSONObject(i));
                         }
 
                         return true;
 
-                    } catch (JSONException jE) {
-                        System.out.println(jE.getMessage());
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage());
                         return false;
                     }
 
                 } else {
-                    System.out.println("Gick skräp att få användare");
                     return false;
                 }
-            } catch (Exception ex){
-                System.out.println(ex.getMessage());
+            } catch (Exception e){
+                Log.e(TAG, e.getMessage());
                 return false;
             }
-
 
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success) {
-                System.out.println("Went well");
+                Log.d(TAG, "Get users: Success.");
             } else {
-                System.out.println("Went bad.");
+                Log.d(TAG, "Get users: Failed.");
             }
         }
 
-        @Override
-        protected void onCancelled() {
-
-        }
-
-
-
     }
 
-
-
-
-
+    /**
+     * Class desc
+     *
+     * @author Fredrik Johansson
+     * */
     public class CheckInternetConnectionTask extends AsyncTask<Void, Void, Boolean> {
 
         CheckInternetConnectionTask() {}
@@ -647,7 +519,9 @@ public class User {
         @Override
         protected Boolean doInBackground(Void... params) {
                 try {
-                    InetAddress ipAddr = InetAddress.getByName("google.se"); //You can replace it with your name
+                    Log.d(TAG, "Checking internet connection...");
+                    Log.d(TAG, "Calling google.se...");
+                    InetAddress ipAddr = InetAddress.getByName("google.se");
 
                     if (ipAddr.equals("")) {
                         return false;
@@ -656,36 +530,23 @@ public class User {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    System.out.println(e.getMessage());
+                    Log.d(TAG, e.getMessage());
                     return false;
                 }
-
-
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             if (success) {
-                System.out.println("Went well");
+                Log.d(TAG, "Internet connection: Available.");
                 internetAvailable = true;
             } else {
-                System.out.println("Went bad.");
+                Log.d(TAG, "Internet connection: NOT available.");
                 internetAvailable = false;
             }
         }
 
-        @Override
-        protected void onCancelled() {
-
-        }
-
-
-
     }
-
-
-
-
 
 
 }

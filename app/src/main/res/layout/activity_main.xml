@@ -14,7 +14,7 @@
     </item>
     -->
 
-
+    <!--
     <TextView android:text="No request made"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
-
+      -->
 
     <!--
     <fragment
@@ -55,6 +55,7 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
     -->
+    <!--
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -63,15 +64,14 @@
         android:id="@+id/editText"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
-
+-->
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lamp"
         android:id="@+id/lamp_switch"
         android:layout_marginTop="30dp"
-        android:layout_below="@+id/myText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="switchLampState"/>
+        android:onClick=""/>
 </RelativeLayout>
