@@ -1,10 +1,11 @@
 <resources>
     <!-- General -->
     <string name="app_name">School Project</string>
+
+    <!-- Activity Titles -->
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_register">Register</string>
-    <string name="appeal_to_register">Don\'t have an account?</string>
-
+    <string name="title_activity_profile">ProfileActivity</string>
 
     <!-- For ease of development / Integration testing -->
     <string name="standard_login_id">1</string>
@@ -13,40 +14,49 @@
 
     <!-- Strings related to server -->
     <string name="server_address">http://192.168.1.45:8085/</string>
-    <string name="websocket_endpoint">ws://192.168.1.45:8085/android-ws</string>
-    <string name="websocket_messaging">android</string>
     <string name="login">login</string>
     <string name="register">register</string>
     <string name="getusers">getusers</string>
+    <string name="getuser">getuser</string>
     <string name="save_profile_settings">saveprofilesettings</string>
 
+        <!-- Web socket-->
+        <!-- End point -->
+        <string name="websocket_endpoint">ws://192.168.1.45:8085/android-ws</string>
+
+        <!-- Messages -->
+        <string name="lamp_state_message_on">ON</string>
+        <string name="lamp_state_message_off">OFF</string>
+        <string name="leave_recipient_list">LEAVE</string>
+
     <!-- Strings related to login and register -->
+    <string name="appeal_to_register">Don\'t have an account?</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="server_error">Server error</string>
+    <string name="server_error_generic_login">Server error: Wrong email or password.</string>
+    <string name="server_error_generic_register">Server error: Invalid information.</string>
+    <string name="server_error_generic_update">Server error: Invalid information.</string>
 
+    <!-- Menu item elements -->
+    <string name="profile_button_text">Profile</string>
+
+    <!-- Button titles -->
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
     <string name="action_register">Register Here</string>
     <string name="action_register_short">Register</string>
-    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="save_button">Save</string>
 
-    <!-- Main screen (mer saker ska flyttas hit) -->
-    <string name="profile_button_text">Profile</string>
-    <string name="getuser">getuser</string>
-
+    <!-- File (local user info saved here) -->
     <string name="user_info">user_info.txt</string>
 
+    <!-- Lamp -->
     <string name="lamp">Lamp</string>
-    <string name="permlab_flashlight">Label</string>
-    <string name="permdesc_flashlight">Description</string>
-
 
 </resources>

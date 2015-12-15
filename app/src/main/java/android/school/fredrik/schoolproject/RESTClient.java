@@ -8,11 +8,15 @@ import com.android.volley.toolbox.Volley;
 
 /**
  * Handles the request que which are used to make the calls to the RESTful API on the server.
+ * Implemented as Singleton.
  * @author Fredrik Johansson
  */
 public class RESTClient {
 
+    // The single available instance
     private static RESTClient mInstance;
+
+    // This is where the requests will be stored.
     private RequestQueue queue;
 
     private static Context mCtx;
@@ -30,6 +34,10 @@ public class RESTClient {
         return mInstance;
     }
 
+    /**
+     * Returns the request que to the caller.
+     * If it hasn't been instantiated, this will be done before returning it to the caller.
+     * */
     public RequestQueue getRequestQueue() {
         if (queue == null) {
             // getApplicationContext() is key, it keeps you from leaking the
@@ -39,6 +47,10 @@ public class RESTClient {
         return queue;
     }
 
+    /**
+     * Adds a new request to the request que.
+     * The request will be performed almost immediately.
+     */
     public <T> void addToRequestQueue(Request<T> req) {
         getRequestQueue().add(req);
     }

@@ -14,7 +14,7 @@ import android.widget.Switch;
 
 
 /**
- * Class description
+ * Class description ...............
  * @author Fredrik Johansson
  */
 public class MainActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
@@ -66,9 +66,18 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
     protected void onDestroy() {
         super.onDestroy();
         /*Sends message to server
-        This will remove this user from the receiver-list on the server.*/
-        c.send("LEAVE");
-        Log.d(TAG, "Sent message to server, removing user from message receivers.");
+        This will remove this user from the receiver-list on the server.
+        Will not recieve messages anymore.
+        */
+        String leaveRecipientList = this.getResources().getString(R.string.leave_recipient_list);
+
+        // Checks if the web socket is connected. It crashes if we try to send without a connection.
+        if(c.isConnected()){
+            c.send(leaveRecipientList);
+            Log.d(TAG, "Sent message to server, removing user from message receivers.");
+        } else {
+            Log.d(TAG, "Trying to send without Web socket connection.");
+        }
     }
 
 /** Called from view. Navigates user to ProfileActivity.*/
@@ -85,12 +94,29 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
         // Checks the state of the switch the user clicked on.
         if(lampSwitch.isChecked()){
             // Sends message to server. Server will tell all receivers that the lamp has been turned ON.
-            c.send("ON");
-            Log.d(TAG, "I switched lamp state to on");
+            String messageOn = this.getResources().getString(R.string.lamp_state_message_on);
+
+            // Checks if the web socket is connected. It crashes if we try to send without a connection.
+            if(c.isConnected()){
+                c.send(messageOn);
+                Log.d(TAG, "I switched lamp state to on (Sent to server)");
+            } else {
+                Log.d(TAG, "Trying to send without Web socket connection.");
+            }
+
+
         } else {
             // Sends message to server. Server will tell all receivers that the lamp has been turned OFF.
-            c.send("OFF");
-            Log.d(TAG, "I switched lamp state to off");
+            String messageOff = this.getResources().getString(R.string.lamp_state_message_off);
+
+            // Checks if the web socket is connected. It crashes if we try to send without a connection.
+            if(c.isConnected()){
+                c.send(messageOff);
+                Log.d(TAG, "I switched lamp state to off (Sent to server)");
+            } else {
+                Log.d(TAG, "Trying to send without Web socket connection.");
+            }
+
         }
     }
 

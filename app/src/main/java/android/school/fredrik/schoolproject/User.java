@@ -11,12 +11,13 @@ import com.android.volley.toolbox.RequestFuture;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.net.InetAddress;
+
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
- * xxxxxxxx
+ * XXX
+ * Implemented as Singleton.
  * @author Fredrik Johansson
  */
 public class User {
@@ -26,18 +27,19 @@ public class User {
     private String userPassword;
 
     private boolean stateChanged = true;
-    private boolean internetAvailable = false;
+
+
+    private InternetChecker internetChecker = new InternetChecker();
 
     private static final User INSTANCE = new User();
 
     // LOG TAG
     private static final String TAG = User.class.getSimpleName();
 
-    public boolean isInternetAvailable() {
-        return internetAvailable;
+    private User(){
+        // Immediately checks if internet is available. (see class InternetChecker how it is implemented)
+        internetChecker.checkInternetConnection();
     }
-
-    private User(){new CheckInternetConnectionTask().execute((Void) null);}
 
     public static User getINSTANCE() {
         return INSTANCE;
@@ -45,7 +47,7 @@ public class User {
 
     public int getUserId(Context context) {
         if(stateChanged){
-            if(isInternetAvailable()){
+            if(internetChecker.isInternetAvailable()){
                 Log.d(TAG, "Internet available: Asking server for info...");
                 new GetUserTask(context).execute((Void) null);
             }
@@ -67,7 +69,7 @@ public class User {
     public String getUserName(Context context) {
         Log.d(TAG, "Trying to get user name");
         if(stateChanged){
-            if(isInternetAvailable()){
+            if(internetChecker.isInternetAvailable()){
                 Log.d(TAG, "Internet available: Asking server for info...");
                 new GetUserTask(context).execute((Void) null);
             }
@@ -88,7 +90,7 @@ public class User {
 
     public String getUserPassword(Context context) {
         if(stateChanged){
-            if(isInternetAvailable()){
+            if(internetChecker.isInternetAvailable()){
                 Log.d(TAG, "Internet available: Asking server for info...");
                 new GetUserTask(context).execute((Void) null);
             }
@@ -275,6 +277,7 @@ public class User {
             // Note to self: Ska ändra namn till eMail i jsonobjektet!!!
             final JSONObject jsonBody = new JSONObject()
                     .put("userId", userId)
+                    .put("oldUserName", userName)
                     .put("newUserName", newUserName)
                     .put("newUserPassword", newUserPassword
                     );
@@ -507,46 +510,7 @@ public class User {
 
     }
 
-    /**
-     * Class desc
-     *
-     * @author Fredrik Johansson
-     * */
-    public class CheckInternetConnectionTask extends AsyncTask<Void, Void, Boolean> {
 
-        CheckInternetConnectionTask() {}
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-                try {
-                    Log.d(TAG, "Checking internet connection...");
-                    Log.d(TAG, "Calling google.se...");
-                    InetAddress ipAddr = InetAddress.getByName("google.se");
-
-                    if (ipAddr.equals("")) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.d(TAG, e.getMessage());
-                    return false;
-                }
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            if (success) {
-                Log.d(TAG, "Internet connection: Available.");
-                internetAvailable = true;
-            } else {
-                Log.d(TAG, "Internet connection: NOT available.");
-                internetAvailable = false;
-            }
-        }
-
-    }
 
 
 }

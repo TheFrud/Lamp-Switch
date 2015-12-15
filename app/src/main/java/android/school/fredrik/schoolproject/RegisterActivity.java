@@ -95,15 +95,27 @@ public class RegisterActivity extends AppCompatActivity{
         // xxx
         View focusView = null;
 
+        // Instantiates a new Validator.
+        // Used for client-side validation
         validator = new ClientSideValidation(this);
 
+        // The Validator object gets called with the supplied data
         validator.checkValidity(email, password);
+
+        // We check if the validation succeeded.
         boolean success = validator.getSuccess();
 
         // If client-side validation failed.
         if(!success){
+/*          Because the validation failed,
+            we are interested in what kind of error it was that caused the failure.
+            That way, we can show the error message to the user.
+            This will help him/her correct the mistake.*/
+
+            // We get the message from the validator
             String message = validator.getMessage();
 
+            // We check which error it was and show the appropriate message to the user.
             if(message.equals(getString(R.string.error_invalid_password))){
                 passwordView.setError(message);
                 focusView = passwordView;
@@ -229,7 +241,11 @@ public class RegisterActivity extends AppCompatActivity{
             // If the server-side validation failed.
             else {
                 // The user gets notified about the failure of the registration attempt.
-                passwordView.setError(getString(R.string.server_error));
+
+                // This is not a optimal message.
+                // We should get passed the message from the server.
+                // However.. this is not implemented as of now.
+                passwordView.setError(getString(R.string.server_error_generic_register));
                 passwordView.requestFocus();
             }
         }
