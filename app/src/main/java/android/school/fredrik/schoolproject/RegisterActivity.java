@@ -51,6 +51,8 @@ public class RegisterActivity extends AppCompatActivity{
         setContentView(R.layout.activity_register);
 
         // So that we can navigate back to the login activity with the up arrow.
+/*        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Instantiates UI elements.
@@ -172,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
     // THIS DOES NOT WORK RIGHT NOW (WIP)
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
@@ -188,7 +190,7 @@ public class RegisterActivity extends AppCompatActivity{
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     /**
      * This task is starting the server-side validation.
