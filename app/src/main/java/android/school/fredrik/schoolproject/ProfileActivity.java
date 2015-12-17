@@ -47,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_profile);
 
-        // So that we can navigate back to the login activity with the up arrow.
+        // So that we can navigate back to the main activity with the up arrow.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -202,6 +202,8 @@ public class ProfileActivity extends AppCompatActivity {
 
             // If the server-side validation succeeded.
             if (success) {
+
+
                 // The user gets sent to the MainActivity. (due to the success of the update)
                 Intent intent = new Intent(ProfileActivity.this.getApplicationContext(), MainActivity.class);
                 startActivity(intent);

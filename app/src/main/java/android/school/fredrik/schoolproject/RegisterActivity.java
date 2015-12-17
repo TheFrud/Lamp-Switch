@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -50,7 +51,6 @@ public class RegisterActivity extends AppCompatActivity{
         setContentView(R.layout.activity_register);
 
         // So that we can navigate back to the login activity with the up arrow.
-        setupActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Instantiates UI elements.
@@ -68,16 +68,6 @@ public class RegisterActivity extends AppCompatActivity{
         Log.d(TAG, "End of onCreate method.");
     }
 
-    /**
-     * Enables the up button in the menu.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-    }
 
     /**
      * Called from view. Attempts to register. Does client-side validation before sending user info to the server for server-side validation.

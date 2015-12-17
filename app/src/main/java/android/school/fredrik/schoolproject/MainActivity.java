@@ -62,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
         Log.d(TAG, "End of onCreate method.");
     }
 
+    /**
+     * xxx
+     *
+     * */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -73,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
 
         // Checks if the web socket is connected. It crashes if we try to send without a connection.
         if(c.isConnected()){
-            c.send(leaveRecipientList);
-            Log.d(TAG, "Sent message to server, removing user from message receivers.");
+            // c.send(leaveRecipientList);
+            // Log.d(TAG, "Sent message to server, removing user from message receivers.");
         } else {
             Log.d(TAG, "Trying to send without Web socket connection.");
         }

@@ -151,7 +151,7 @@ public class User {
 
                 // Plocka ut sträng ifrån jsonsvaret. Vi tar värdet från attributet "status"
                 String responseStringStatus = (String) response.get("status");
-                String msg = (String) response.get("msg");
+                // String msg = (String) response.get("msg");
 
                 // Om servern svarat med statusen "Success", så betyder det att användaren kunde registreras.
                 if(responseStringStatus.equals("Success")){
@@ -311,6 +311,10 @@ public class User {
                     // Vi sätter vår variabel till true för att visa att uppgifterna var korrekta.
                     success = true;
                     setStateChanged(true);
+
+                    setUserName(newUserName);
+                    setUserPassword(newUserPassword);
+
 
                     UserFileUtil.saveUserDataOnFile(userId, newUserName, newUserPassword, context);
                 }

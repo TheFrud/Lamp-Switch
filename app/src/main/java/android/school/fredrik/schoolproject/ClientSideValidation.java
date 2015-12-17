@@ -53,7 +53,7 @@ public class ClientSideValidation {
      * </u>
      * */
     public void checkValidity(String email, String password){
-        if(!isEmailValid(email) || emailValidator.isValid(email)){
+        if(!isEmailValid(email) || !emailValidator.isValid(email)){
             success = false;
             message = context.getString(R.string.error_invalid_email);
         }
@@ -61,7 +61,7 @@ public class ClientSideValidation {
             success = false;
             message = context.getString(R.string.error_field_required);
         }
-        else if(!isPasswordValid(password) && TextUtils.isEmpty(password)){
+        else if(!isPasswordValid(password) || TextUtils.isEmpty(password)){
             success = false;
             message = context.getString(R.string.error_invalid_password);
         }

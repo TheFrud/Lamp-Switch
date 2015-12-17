@@ -68,6 +68,7 @@
                 android:id="@+id/button2"
                 android:layout_weight="0"
                 android:onClick="saveProfileSettings"
+                android:background="@drawable/custom_button_color"
                 />
         </LinearLayout>
     </ScrollView>

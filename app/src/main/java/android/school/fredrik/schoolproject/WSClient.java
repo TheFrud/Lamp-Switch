@@ -38,18 +38,16 @@ public class WSClient extends WebSocketClient {
 
     private WSClient(URI serverURI) {
         super(serverURI);
-        this.connected = connected;
     }
 
     private WSClient(URI serverUri, Draft draft) {
         super(serverUri, draft);
-        this.connected = connected;
     }
 
     public static WSClient getINSTANCE(Context context) {
+        WSClient.context = context;
         if(INSTANCE == null){
             try{
-                WSClient.context = context;
                 INSTANCE = new WSClient(new URI( context.getResources().getString(R.string.websocket_endpoint) ), new Draft_10() );
             } catch(URISyntaxException ex){
                 Log.d(TAG, ex.getMessage());
@@ -73,9 +71,13 @@ public class WSClient extends WebSocketClient {
     @Override
     public void onOpen( ServerHandshake handshakedata ) {
         Log.d(TAG, "opened connection");
+
+        // So we can check later on, if we need to connect.
+        // Will save us an exception...
         connected = true;
+
+        // We immediately ask  the server for the current state of the lamp.
         send("STATE_REQUEST");
-        // if you plan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
     }
 
     /**
@@ -111,6 +113,9 @@ public class WSClient extends WebSocketClient {
     public void onClose( int code, String reason, boolean remote ) {
         // The codecodes are documented in class org.java_websocket.framing.CloseFrame
         Log.d(TAG, "Connection closed by " + (remote ? "remote peer" : "us"));
+
+        // So we can check later on, if we need to connect.
+        // Trying to send messages to the server without a connection would not be pretty...
         connected = false;
     }
 
@@ -137,6 +142,8 @@ public class WSClient extends WebSocketClient {
      *  This task is very simple.
      *  It fetches the Switch-object from UI and sets it to the correct state.
      *  In this context, the correct state is whatever state the switch is SERVER-SIDE.
+     *  The task gets passed the server-side state in its constructor.
+     *  An object of the class is meant to be created after receiving a message from the server.
      * @author Fredrik Johansson
      * */
     public class UpdateSwitch extends AsyncTask<Void, Void, Boolean> {
@@ -154,18 +161,22 @@ public class WSClient extends WebSocketClient {
         @Override
         protected void onPostExecute(final Boolean state) {
 
+            Log.d(TAG, "Post executed.");
+
             // We fetch the Switch-object from the UI
             final Switch lampSwitch = (Switch) ((Activity)context).findViewById(R.id.lamp_switch);
 
             // True, if the state is ON.
             if (state) {
                 // The switch in the UI gets set to checked (ON)
+                Log.d(TAG, "Lamp switch set to ON.");
                 lampSwitch.setChecked(true);
             }
 
             // If the state is OFF
             else {
                 // The switch in the UI gets set to unchecked (OFF)
+                Log.d(TAG, "Lamp switch set to OFF.");
                 lampSwitch.setChecked(false);
             }
         }
