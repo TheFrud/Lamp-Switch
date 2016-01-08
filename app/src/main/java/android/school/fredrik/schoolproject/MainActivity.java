@@ -2,7 +2,6 @@ package android.school.fredrik.schoolproject;
 
 import android.content.Intent;
 import android.os.Build;
-import android.school.fredrik.schoolproject.dummy.DummyContent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +16,7 @@ import android.widget.Switch;
  * Class description ...............
  * @author Fredrik Johansson
  */
-public class MainActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     // Websocket-client.
     private WSClient c = null;
@@ -122,11 +121,6 @@ public class MainActivity extends AppCompatActivity implements ItemFragment.OnLi
             }
 
         }
-    }
-
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        Log.d(TAG, "Interaction!!! Item " + item.content);
     }
 
 

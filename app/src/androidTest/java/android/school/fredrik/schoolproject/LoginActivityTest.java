@@ -20,5 +20,6 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
         loginActivity = getActivity();
 
 
+
     }
 }

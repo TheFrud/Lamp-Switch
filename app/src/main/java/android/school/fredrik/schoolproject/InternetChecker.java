@@ -6,7 +6,7 @@ import android.util.Log;
 import java.net.InetAddress;
 
 /**
- * xxx ....
+ * Checks if internet is available.
  * @author Fredrik Johansson
  * */
 public class InternetChecker {
@@ -20,14 +20,16 @@ public class InternetChecker {
         return internetAvailable;
     }
 
+    /**
+     * Checks the internet connection
+     */
     public void checkInternetConnection(){
         new CheckInternetConnectionTask().execute((Void) null);
     }
 
 
     /**
-     * Class desc
-     *
+     * Asyncronous task for checking the internet connection.
      * @author Fredrik Johansson
      * */
     public class CheckInternetConnectionTask extends AsyncTask<Void, Void, Boolean> {

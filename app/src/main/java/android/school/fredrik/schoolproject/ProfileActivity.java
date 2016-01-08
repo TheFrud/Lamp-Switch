@@ -21,10 +21,10 @@ import android.widget.EditText;
  * */
 public class ProfileActivity extends AppCompatActivity {
 
-    // xxx
+    // Fetches the single existing instance of User
     private User user = User.getINSTANCE();
 
-    // xxx
+    // For client validation when trying to update user data
     private ClientSideValidation validator = null;
 
     // UI references
@@ -112,7 +112,7 @@ public class ProfileActivity extends AppCompatActivity {
         eMailView.setError(null);
         passwordView.setError(null);
 
-        // xxx
+        // The view to focus on if client-validation fails.
         View focusView = null;
 
         // Get user supplied values.

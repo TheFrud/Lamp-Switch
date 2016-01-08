@@ -6,65 +6,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <!--
-    <item
-        android:icon="@drawable/ic_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </item>
-    -->
-
-    <!--
-    <TextView android:text="No request made"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/myText"
-        android:focusable="false"
-        android:layout_marginTop="36dp"
-        android:layout_below="@+id/requestButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Make Request"
-        android:id="@+id/requestButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="makeRequest" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0"
-        android:id="@+id/requests"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-      -->
-
-    <!--
-    <fragment
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="android.school.fredrik.schoolproject.ItemFragment"
-        android:id="@+id/fragment"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-    -->
-    <!--
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
--->
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

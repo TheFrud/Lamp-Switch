@@ -10,8 +10,10 @@ import java.util.List;
 
 
 /**
- * Created by Fredrik on 08-Dec-15.
- */
+ * Tests for the UserTest.
+ * Essentially integration testing (with the server as a "dependency")
+ * @author Fredrik Johansson
+ * */
 public class UserTest extends AndroidTestCase {
 
     private User user;
@@ -29,11 +31,18 @@ public class UserTest extends AndroidTestCase {
 
     }
 
+    /**
+     * Tests login functionality with valid input data
+     */
     public void testLogin(){
         boolean success = user.login(standardLogin, standardPassword, context);
         assertTrue(success);
     }
 
+    /**
+     * Tests if we can fetch all registered users from the server
+     * @throws InterruptedException
+     */
     public void testGetUsers() throws InterruptedException {
         List<JSONObject> users = new ArrayList<>();
         user.getUsers(users, context);
@@ -44,7 +53,9 @@ public class UserTest extends AndroidTestCase {
         assertTrue(users.size() > 0);
     }
 
-    // Essentially tests the getters which are implemented which a sort of cache
+    /**
+     * Essentially tests the getters which are implemented which a sort of cache
+     */
     public void testCache() throws InterruptedException {
 
         // This is usually set after login.
@@ -73,6 +84,9 @@ public class UserTest extends AndroidTestCase {
 
     }
 
+    /**
+     * Tests if we can save user settings.
+     */
     public void testSaveProfileSettings(){
         boolean success = user.saveProfileSettings(standardLogin, standardPassword, context);
         assert(success);

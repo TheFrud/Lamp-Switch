@@ -27,10 +27,10 @@ import android.widget.EditText;
  */
 public class RegisterActivity extends AppCompatActivity{
 
-    // xxx
+    // Fetches the single existing instance of User
     private User user = User.getINSTANCE();
 
-    // xxx
+    // For client validation when registering
     private ClientSideValidation validator = null;
 
     // UI references.
@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity{
         String email = eMailView.getText().toString();
         String password = passwordView.getText().toString();
 
-        // xxx
+        // The view to focus on if registration fails
         View focusView = null;
 
         // Instantiates a new Validator.

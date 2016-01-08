@@ -21,10 +21,10 @@ import android.widget.EditText;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    // xxx
+    // Fetches the single existing instance of User
     private User user = User.getINSTANCE();
 
-    // xxx
+    // For client validation when logging in
     private ClientSideValidation validator = null;
 
     // UI references.
@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         eMailView.setError(null);
         passwordView.setError(null);
 
-        // xxx
+        // The view to focus on if client-validation fails
         View focusView = null;
 
         // Get user supplied values.
