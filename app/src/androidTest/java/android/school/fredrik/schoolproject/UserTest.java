@@ -76,6 +76,7 @@ public class UserTest extends AndroidTestCase {
 
         // This is usually set after login.
         user.setUserId(Integer.parseInt(context.getResources().getString(R.string.standard_login_id)));
+        user.setStateChanged(true);
 
         // Will make a network call due to statechanged being TRUE
         user.getUserName(context);

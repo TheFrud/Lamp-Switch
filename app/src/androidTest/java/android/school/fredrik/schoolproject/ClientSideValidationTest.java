@@ -19,11 +19,6 @@ package android.school.fredrik.schoolproject;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
-import junit.framework.TestCase;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Testing client-side validation.
  * @author Fredrik Johansson

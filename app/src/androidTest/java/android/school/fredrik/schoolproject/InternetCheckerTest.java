@@ -18,8 +18,6 @@ package android.school.fredrik.schoolproject;
 
 import android.test.AndroidTestCase;
 
-import junit.framework.TestCase;
-
 /**
  * Tests if internet is available.
  * @author Fredrik Johansson

@@ -19,8 +19,6 @@ package android.school.fredrik.schoolproject;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
-import junit.framework.TestCase;
-
 /**
  * Tests file functionality (write and read).
  * Created by Fredrik on 08-Jan-16.
@@ -55,6 +53,7 @@ public class UserFileUtilTest extends AndroidTestCase {
      * Tests if user info can be read from file.
      */
     public void testReadFromFile(){
+        userFileUtil.saveUserDataOnFile(dummyUserId, dummyUserName, dummyUserPassword, context);
         String retrievedUserId = userFileUtil.readFromFile("userId", context);
         String retrievedUserName = userFileUtil.readFromFile("userName", context);
         String retrievedUserPassword = userFileUtil.readFromFile("userPassword", context);
