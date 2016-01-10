@@ -315,9 +315,10 @@ public class User {
         }
     }
 
-/*    public void getUsers(List users, Context context){
+    // Remove? (not used except in test)
+    public void getUsers(List users, Context context){
         new GetUsersTask(users, context).execute((Void) null);
-    }*/
+    }
 
 
     /**
