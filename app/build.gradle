@@ -27,7 +27,7 @@ android {
     // Happened after I added 'commons-validator:commons-validator:1.5.0'
     // to dependencies. I think it had to do with duplicated files between android and this dependency.
     packagingOptions{
-        exclude 'META-INF/LICENSE.txt'
+        // exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
 }
