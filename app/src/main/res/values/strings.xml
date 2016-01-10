@@ -1,6 +1,6 @@
 <resources>
     <!-- General -->
-    <string name="app_name">School Project</string>
+    <string name="app_name">Lamp Switch</string>
 
     <!-- Activity Titles -->
     <string name="title_activity_login">Sign in</string>

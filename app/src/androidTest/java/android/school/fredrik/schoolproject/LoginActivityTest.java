@@ -3,7 +3,8 @@ package android.school.fredrik.schoolproject;
 import android.test.ActivityInstrumentationTestCase2;
 
 /**
- * Created by Fredrik on 08-Dec-15.
+ * xxx
+ * @author Fredrik Johansson
  */
 public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginActivity> {
 
