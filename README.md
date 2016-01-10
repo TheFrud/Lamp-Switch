@@ -1,4 +1,4 @@
-# School-Project
+# Lamp Switch
 Android project for school.
 
 
