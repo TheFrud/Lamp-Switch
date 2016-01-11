@@ -48,14 +48,9 @@ buildscript {
         mavenCentral()
     }
 
-    dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:3.2.3'
-    }
 }
 
 // Required because retrolambda is on maven central
 repositories {
     mavenCentral()
 }
-
-apply plugin: 'me.tatarka.retrolambda'

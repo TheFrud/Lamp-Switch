@@ -76,7 +76,11 @@ public class RegisterActivity extends AppCompatActivity{
 
         // When the user clicks the registration button. A attempt will be made to log register the user.
         mEmailSignInButton.setOnClickListener(
-                view -> attemptRegistration()
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        attemptRegistration();
+                    }
+                }
         );
 
         Log.d(TAG, "End of onCreate method.");

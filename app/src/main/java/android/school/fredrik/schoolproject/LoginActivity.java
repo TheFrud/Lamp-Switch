@@ -73,12 +73,20 @@ public class LoginActivity extends AppCompatActivity {
 
         // When the user clicks the login button. A attempt will be made to log the user in.
         mEmailSignInButton.setOnClickListener(
-                view -> attemptLogin()
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        attemptLogin();
+                    }
+                }
         );
 
         // When the user clicks the "register here" button. We will navigate the user to the RegisterActivity.
         navigateToActivityRegisterButton.setOnClickListener(
-                view -> navigateToActivityRegister()
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        navigateToActivityRegister();
+                    }
+                }
         );
 
         Log.d(TAG, "End of onCreate method.");
