@@ -16,10 +16,6 @@ limitations under the License.
 
 package android.school.fredrik.schoolproject;
 
-/**
- * Created by Fredrik on 14-Dec-15.
- */
-
 import android.content.Context;
 import android.text.TextUtils;
 

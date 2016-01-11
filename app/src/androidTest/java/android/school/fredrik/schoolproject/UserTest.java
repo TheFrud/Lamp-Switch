@@ -56,20 +56,6 @@ public class UserTest extends AndroidTestCase {
     }
 
     /**
-     * Tests if we can fetch all registered users from the server
-     * @throws InterruptedException
-     */
-    public void testGetUsers() throws InterruptedException {
-        List<JSONObject> users = new ArrayList<>();
-        user.getUsers(users, context);
-
-        // Wait for network
-        Thread.sleep(3000);
-
-        assertTrue(users.size() > 0);
-    }
-
-    /**
      * Essentially tests the getters which are implemented which a sort of cache
      */
     public void testCache() throws InterruptedException {

@@ -182,6 +182,9 @@ public class User {
         try{
 
             // Creates a jsonobject into which we put the user data we want to register.
+            // The attribute name is "name" instead off "email".
+            // I haven't changed this for fear of breaking some server code.
+            // Coupling between client and server = BAD (I KNOW)
             final JSONObject jsonBody = new JSONObject().put("name", mEmail).put("password", mPassword);
 
             // Creates a future. Need to block so that the method don't return before the server has responded.
@@ -243,7 +246,7 @@ public class User {
      */
     public boolean login(String mEmail, String mPassword, Context context){
 
-        // Keeps track of the success of the registration
+        // Keeps track of the success of the login
         boolean success;
 
         // Server URL
@@ -251,6 +254,9 @@ public class User {
 
         try{
             // Creates a jsonobject into which we put the user data we want to login with.
+            // The attribute name is "name" instead off "email".
+            // I haven't changed this for fear of breaking some server code.
+            // Coupling between client and server = BAD (I KNOW)
             final JSONObject jsonBody = new JSONObject().put("name", mEmail).put("password", mPassword);
 
             // Creates a future. Need to block so that the method don't return before the server has responded.
@@ -315,12 +321,6 @@ public class User {
         }
     }
 
-    // Remove? (not used except in test)
-    public void getUsers(List users, Context context){
-        new GetUsersTask(users, context).execute((Void) null);
-    }
-
-
     /**
      * Handles the updating of user data.
      * @param newUserName
@@ -330,7 +330,7 @@ public class User {
      */
     public boolean saveProfileSettings(String newUserName, String newUserPassword, Context context){
 
-        // Keeps track of the success of the registration
+        // Keeps track of the success of the update
         boolean success;
 
         // Server URL
@@ -342,6 +342,9 @@ public class User {
             int userId = getUserId(context);
 
             // Creates a jsonobject into which we put the user data we need for update.
+            // The attribute names are "name" instead off "email".
+            // I haven't changed this for fear of breaking some server code.
+            // Coupling between client and server = BAD (I KNOW)
             final JSONObject jsonBody = new JSONObject()
                     .put("userId", userId)
                     .put("oldUserName", userName)
@@ -374,8 +377,8 @@ public class User {
                     // We set the variable to true to show that the update was successful.
                     success = true;
 
-                    // XXXXXXXXXXX
-                    // setStateChanged(true);
+                    // The update succeded, so we want to show that the server state has changed
+                    setStateChanged(true);
 
                     // Set user data instance variables
                     setUserName(newUserName);
@@ -410,12 +413,14 @@ public class User {
     }
 
     /**
-     *  TA BORT DENNA?
+     * This task is fetching the current user data from the server.
+     * After this is done it sets the local values to those retrieved from the server.
      */
     public class GetUserTask extends AsyncTask<Void, Void, Boolean> {
 
         private final Context context;
 
+        // Keeps track of the success of the task
         private boolean success;
 
         GetUserTask(Context context) {
@@ -430,37 +435,34 @@ public class User {
             String url = context.getResources().getString(R.string.server_address) + context.getResources().getString(R.string.getuser);
 
             try{
-                // Note to self: Ska ändra namn till eMail i jsonobjektet!!!
+                // Creates a jsonobject into which we put the user id for the user whose info we want to get from the server
                 final JSONObject jsonBody = new JSONObject().put("userId", userId);
 
-                // Skapar en future. Behöver blocka så att metoden inte returnerar innan jag fått tillbaka ett svar ifrån servern.
+                // Creates a future. Need to block so that the method don't return before the server has responded.
                 RequestFuture<JSONObject> future = RequestFuture.newFuture();
 
-
-                // Request a string response from the provided URL.
-                // Functional syntax
-                // Plugin makes this possible with android.
-                // Much more concise in my opinion.
-
-                // Skapar en request som ska skickas till servern.
+                // Creates a request to be sent to the server.
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody, future, future);
 
-                // Lägger till request i kö. (Körs i princip direkt)
+                // Adds the request to the que. (executed almost instantly according to api spec)
                 RESTClient.getInstance(context).addToRequestQueue(request);
 
                 try {
-                    // När vi fått ett svar från servern spar vi ner det i en variabel.
 
+                    // When the server has responded we save the response in a variable
                     JSONObject response = future.get();
 
-                    // Plocka ut sträng ifrån jsonsvaret. Vi tar värdet från attributet "status"
+                    // Gets the "status" attribute from the response.
+                    // This is the servers way of telling us if the action succeeded.
                     String responseString = (String) response.get("status");
 
-                    // Om servern svarat med statusen "Success", så betyder det att användaren hittades.
+                    // Checks if the server could find the user
                     if(responseString.equals("Success")){
+
                         Log.d(TAG, "GetUserTask: Success handler");
                         Log.d(TAG, "GetUserTask: Executed correctly.");
-                        // Vi sätter vår variabel till true för att visa att uppgifterna var korrekta.
+
+                        // We set the variable to true to show that the user could be found
                         success = true;
 
                         // Get response data from server
@@ -468,7 +470,7 @@ public class User {
                         String userName = (String) response.get("userName");
                         String userPassword = (String) response.get("userPassword");
 
-                        // Set user data so when can use it in the Android environment
+                        // Set user data instance variables
                         setUserId(userId);
                         setUserName(userName);
                         setUserPassword(userPassword);
@@ -503,85 +505,12 @@ public class User {
 
         @Override
         protected void onPostExecute(final Boolean success) {
+
+            // We log if the task succeded or not
             if (success) {
                 Log.d(TAG, "Get user: Success.");
             } else {
                 Log.d(TAG, "Get user: Failed.");
-            }
-        }
-
-    }
-
-    /**
-     *  TA BORT DENNA?
-     */
-    public class GetUsersTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final Context context;
-        private List<JSONObject> users;
-
-        GetUsersTask(List users, Context context) {
-            this.context = context;
-            this.users = users;
-
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-            String url = context.getResources().getString(R.string.server_address) + context.getResources().getString(R.string.getusers);
-
-            RequestFuture<JSONObject> future = RequestFuture.newFuture();
-
-            try {
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, future, future);
-                RESTClient.getInstance(context).addToRequestQueue(request);
-            } catch (Exception e){
-                Log.e(TAG, e.getMessage());
-            }
-
-            try {
-                // När vi fått ett svar från servern spar vi ner det i en variabel.
-                JSONObject response = future.get();
-
-                // Plocka ut sträng ifrån jsonsvaret. Vi tar värdet från attributet "status"
-                String responseString = (String) response.get("status");
-
-                // Om servern svarat med statusen "Success", så betyder det att användaren hittades.
-                if (responseString.equals("Success")) {
-
-                    // Try and get json array
-                    try {
-                        JSONArray jsArray = response.getJSONArray("users");
-
-                        // Adding the users we got from the server into our list.
-                        for (int i = 0; i < jsArray.length(); i++) {
-                            users.add(jsArray.getJSONObject(i));
-                        }
-
-                        return true;
-
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.getMessage());
-                        return false;
-                    }
-
-                } else {
-                    return false;
-                }
-            } catch (Exception e){
-                Log.e(TAG, e.getMessage());
-                return false;
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            if (success) {
-                Log.d(TAG, "Get users: Success.");
-            } else {
-                Log.d(TAG, "Get users: Failed.");
             }
         }
 
