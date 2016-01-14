@@ -13,7 +13,7 @@ Copyright 2016 Fredrik Johansson
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-
+<!-- Layout where the user can login och navigate to the registration layout -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -44,6 +44,7 @@ Copyright 2016 Fredrik Johansson
         android:layout_height="match_parent"
         android:fillViewport="false">
 
+        <!-- Form -->
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
@@ -51,6 +52,7 @@ Copyright 2016 Fredrik Johansson
             android:orientation="vertical"
             android:weightSum="1">
 
+            <!-- Email input -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -67,6 +69,7 @@ Copyright 2016 Fredrik Johansson
 
             </android.support.design.widget.TextInputLayout>
 
+            <!-- Password input -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -85,6 +88,7 @@ Copyright 2016 Fredrik Johansson
 
             </android.support.design.widget.TextInputLayout>
 
+            <!-- Sign in button -->
             <Button
                 android:id="@+id/sign_in_button"
                 style="?android:textAppearanceSmall"
@@ -95,17 +99,7 @@ Copyright 2016 Fredrik Johansson
                 android:textStyle="bold"
                 android:background="@drawable/custom_button_color"></Button>
 
-
-               <!--
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/appeal_to_register"
-                android:id="@+id/textView3"
-                android:layout_marginTop="16dp" />
-                -->
-
+            <!-- Navigate to registration button -->
             <Button
                 android:id="@+id/navigate_to_activity_register_button"
                 style="?android:textAppearanceSmall"
@@ -117,5 +111,6 @@ Copyright 2016 Fredrik Johansson
                 android:background="@drawable/custom_button_color" />
 
         </LinearLayout>
+        <!-- End of form -->
     </ScrollView>
 </LinearLayout>

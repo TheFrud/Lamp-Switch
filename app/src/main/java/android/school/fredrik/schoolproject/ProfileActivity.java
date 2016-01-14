@@ -32,7 +32,8 @@ import android.view.View;
 import android.widget.EditText;
 
 /**
- * Makes it possible for the user to change his/her user info.
+ * Handles the updating of user info.
+ * Also provides navigation to the main view.
  * @author Fredrik Johansson
  * */
 public class ProfileActivity extends AppCompatActivity {

@@ -34,7 +34,7 @@ import android.widget.EditText;
 
 
 /**
- * Handles the registration functionality.
+ * Handles the registration functionality which makes it possible to create a new user.
  * @author Fredrik Johansson
  */
 public class RegisterActivity extends AppCompatActivity{

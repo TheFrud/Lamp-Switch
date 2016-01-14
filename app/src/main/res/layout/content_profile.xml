@@ -14,6 +14,10 @@ Copyright 2016 Fredrik Johansson
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
+
+<!-- Layout with the form which the user can use to update his/her data
+    This layout is included in the activity_profile.xml file.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,6 +32,7 @@ Copyright 2016 Fredrik Johansson
     tools:context="android.school.fredrik.schoolproject.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
+    <!-- Update progress -->
     <ProgressBar
         android:id="@+id/save_profile_settings_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -36,46 +41,54 @@ Copyright 2016 Fredrik Johansson
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
+
     <ScrollView
         android:id="@+id/save_profile_settings_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <!-- Form -->
         <LinearLayout
             android:id="@+id/save_profile_settings_form_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <!-- Email label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Name"
+                android:text="@string/prompt_email"
                 android:id="@+id/textView2" />
 
+            <!-- Email input -->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="[Json data]"
+                android:text="@string/json_placeholder_data"
                 android:ems="10"
                 android:id="@+id/userName" />
 
+            <!-- Password label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="64dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Password"
+                android:text="@string/prompt_password"
                 android:id="@+id/textView" />
 
+            <!-- Password input -->
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:ems="10"
                 android:id="@+id/userPassword"
-                android:text="[Json data]" />
+                android:text="@string/json_placeholder_data" />
 
+            <!-- Save updated data button -->
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,6 +99,8 @@ Copyright 2016 Fredrik Johansson
                 android:background="@drawable/custom_button_color"
                 />
         </LinearLayout>
+        <!-- End of form -->
     </ScrollView>
+
 
 </LinearLayout>

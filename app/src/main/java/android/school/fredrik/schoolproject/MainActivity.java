@@ -29,7 +29,8 @@ import android.widget.Switch;
 
 
 /**
- * Class description ...............
+ * Handles the main functionality of the application (toggle lamp state).
+ * Also provides navigation to the profile view.
  * @author Fredrik Johansson
  */
 public class MainActivity extends AppCompatActivity {
@@ -77,10 +78,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "End of onCreate method.");
     }
 
-    /**
-     * xxx
-     *
-     * */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -92,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Checks if the web socket is connected. It crashes if we try to send without a connection.
         if(c.isConnected()){
+
+            // OBS: Denna kod visade sig vara överflödig men spar koden så länge.
             // c.send(leaveRecipientList);
             // Log.d(TAG, "Sent message to server, removing user from message receivers.");
         } else {

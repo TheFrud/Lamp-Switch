@@ -26,6 +26,11 @@ import android.test.AndroidTestCase;
 public class ClientSideValidationTest extends AndroidTestCase {
 
     private Context context;
+
+    /*
+    Setting up variables to be used in tests.
+    Valid and invalid emails and passwords.
+     */
     private String validEmail = "slowdive@live.com";
     private String validPassword = "abcd";
     private String invalidEmail = "rogga.se";

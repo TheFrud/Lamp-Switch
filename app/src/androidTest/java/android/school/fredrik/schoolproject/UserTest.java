@@ -34,6 +34,10 @@ public class UserTest extends AndroidTestCase {
 
     private User user;
     private Context context;
+
+    /*
+    Declaring variables to be used in tests.
+     */
     private String standardLogin;
     private String standardPassword;
 
@@ -42,6 +46,10 @@ public class UserTest extends AndroidTestCase {
         super.setUp();
         user = User.getINSTANCE();
         context = getContext();
+
+        /*
+        Initialising test data.
+         */
         standardLogin = context.getResources().getString(R.string.standard_login_name);
         standardPassword = context.getResources().getString(R.string.standard_login_password);
 

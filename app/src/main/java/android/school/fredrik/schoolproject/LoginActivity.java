@@ -32,7 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 /**
- * Handles the login functionality.
+ * Handles the login logic and provides navigation to the register view.
  * @author Fredrik Johansson
  */
 public class LoginActivity extends AppCompatActivity {

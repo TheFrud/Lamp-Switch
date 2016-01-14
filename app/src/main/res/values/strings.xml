@@ -28,7 +28,7 @@ Copyright 2016 Fredrik Johansson
     <string name="standard_login_password">pass1</string>
 
     <!-- Strings related to server -->
-    <string name="server_address">http://192.168.1.45:8085/</string>
+    <string name="server_address">http://46.239.118.23:8085/</string>
     <string name="login">login</string>
     <string name="register">register</string>
     <string name="getusers">getusers</string>
@@ -37,7 +37,7 @@ Copyright 2016 Fredrik Johansson
 
         <!-- Web socket-->
         <!-- End point -->
-        <string name="websocket_endpoint">ws://192.168.1.45:8085/android-ws</string>
+        <string name="websocket_endpoint">ws://46.239.118.23:8085/android-ws</string>
 
         <!-- Messages -->
         <string name="lamp_state_message_on">ON</string>
@@ -57,6 +57,7 @@ Copyright 2016 Fredrik Johansson
     <string name="server_error_generic_login">Server error: Wrong email or password.</string>
     <string name="server_error_generic_register">Server error: Invalid information.</string>
     <string name="server_error_generic_update">Server error: Invalid information.</string>
+    <string name="json_placeholder_data">[Json data...]</string>
 
     <!-- Menu item elements -->
     <string name="profile_button_text">Profile</string>

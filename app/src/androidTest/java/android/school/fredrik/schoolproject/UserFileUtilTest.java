@@ -27,6 +27,10 @@ public class UserFileUtilTest extends AndroidTestCase {
 
     private UserFileUtil userFileUtil;
     private Context context;
+
+    /*
+    Declaring variables to be used in tests.
+     */
     private int dummyUserId;
     private String dummyUserName;
     private String dummyUserPassword;
@@ -36,6 +40,10 @@ public class UserFileUtilTest extends AndroidTestCase {
         super.setUp();
         userFileUtil = new UserFileUtil();
         context = getContext();
+
+        /*
+        Initialising test variables.
+         */
         dummyUserId = 100;
         dummyUserName = "Dummy Usersson";
         dummyUserPassword = "dummypassword";
@@ -53,16 +61,17 @@ public class UserFileUtilTest extends AndroidTestCase {
      * Tests if user info can be read from file.
      */
     public void testReadFromFile(){
+        // Saving test data to file
         userFileUtil.saveUserDataOnFile(dummyUserId, dummyUserName, dummyUserPassword, context);
+
+        // Retriving saved test data
         String retrievedUserId = userFileUtil.readFromFile("userId", context);
         String retrievedUserName = userFileUtil.readFromFile("userName", context);
         String retrievedUserPassword = userFileUtil.readFromFile("userPassword", context);
 
-        System.out.println(retrievedUserId);
-        System.out.println(retrievedUserName);
-        System.out.println(retrievedUserPassword);
-
         boolean correctData = false;
+
+        // Checks if the retrieved test data is the same as the data that was saved to file.
         if(retrievedUserId.equals(String.valueOf(retrievedUserId)) && retrievedUserName.equals(dummyUserName) && retrievedUserPassword.equals(dummyUserPassword)){
             correctData = true;
         }
